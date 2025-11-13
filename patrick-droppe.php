@@ -33,6 +33,10 @@ class PatrickDroppe {
         
         // Enqueue styles and scripts
         add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
+        
+        // Register AJAX handlers
+        add_action('wp_ajax_load_more_posts', array($this, 'load_more_posts'));
+        add_action('wp_ajax_nopriv_load_more_posts', array($this, 'load_more_posts'));
     }
     
     /**
@@ -54,13 +58,101 @@ class PatrickDroppe {
      * Enqueue plugin assets
      */
     public function enqueue_assets() {
-        // Enqueue main plugin styles if needed
+        // Enqueue main plugin styles
         wp_enqueue_style(
             'patrick-droppe-styles',
             PATRICK_DROPPE_PLUGIN_URL . 'assets/css/style.css',
             array(),
             PATRICK_DROPPE_VERSION
         );
+        
+        // Enqueue main plugin scripts
+        wp_enqueue_script(
+            'patrick-droppe-scripts',
+            PATRICK_DROPPE_PLUGIN_URL . 'assets/js/script.js',
+            array('jquery'),
+            PATRICK_DROPPE_VERSION,
+            true
+        );
+        
+        // Localize script for AJAX
+        wp_localize_script('patrick-droppe-scripts', 'patrick_droppe_ajax', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('patrick_droppe_nonce')
+        ));
+    }
+    
+    /**
+     * AJAX handler for loading more posts
+     */
+    public function load_more_posts() {
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'], 'patrick_droppe_nonce')) {
+            wp_die('Security check failed');
+        }
+        
+        $layout = sanitize_text_field($_POST['layout']);
+        $category = sanitize_text_field($_POST['category']);
+        $offset = intval($_POST['offset']);
+        $posts_per_load = intval($_POST['posts_per_load']);
+        
+        // Query arguments
+        $args = array(
+            'post_type' => 'post',
+            'posts_per_page' => $posts_per_load,
+            'post_status' => 'publish',
+            'offset' => $offset,
+        );
+        
+        // Add category filter if specified
+        if (!empty($category)) {
+            $args['category_name'] = $category;
+        }
+        
+        $query = new WP_Query($args);
+        
+        if ($query->have_posts()) {
+            while ($query->have_posts()) : $query->the_post();
+                ?>
+                <article class="blog-grid-item">
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="blog-grid-thumbnail">
+                            <a href="<?php the_permalink(); ?>">
+                                <?php the_post_thumbnail('large'); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="blog-grid-content">
+                        <div class="blog-grid-meta">
+                            <?php 
+                                $content = get_post_field('post_content', get_the_ID());
+                                $word_count = str_word_count(strip_tags($content));
+                                $reading_time = ceil($word_count / 200);
+                                echo $reading_time . ' minutes read';
+                            ?>
+                            <span class="separator">·</span>
+                            <?php echo get_the_date('F j, Y'); ?>
+                        </div>
+
+                        <h3 class="blog-grid-title">
+                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                        </h3>
+
+                        <p class="blog-grid-excerpt">
+                            <?php 
+                                $excerpt = get_the_excerpt();
+                                echo wp_trim_words($excerpt, 20, '...');
+                            ?>
+                        </p>
+                    </div>
+                </article>
+                <?php
+            endwhile;
+        }
+        
+        wp_reset_postdata();
+        wp_die();
     }
 }
 

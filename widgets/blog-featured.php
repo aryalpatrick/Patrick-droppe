@@ -18,7 +18,16 @@ function blog_featured_layout_shortcode($atts) {
     // Shortcode attributes
     $atts = shortcode_atts(array(
         'category' => '',
+        'load_more' => '',
+        'button_text' => 'Load More',
     ), $atts);
+
+    $load_more_posts = !empty($atts['load_more']) ? intval($atts['load_more']) : 0;
+    $category = sanitize_text_field($atts['category']);
+    $button_text = sanitize_text_field($atts['button_text']);
+    
+    // Generate unique container ID
+    $container_id = 'blog-featured-' . uniqid();
 
     // Query arguments for 5 most recent posts
     $args = array(
@@ -28,8 +37,8 @@ function blog_featured_layout_shortcode($atts) {
     );
 
     // Add category filter if specified
-    if (!empty($atts['category'])) {
-        $args['category_name'] = sanitize_text_field($atts['category']);
+    if (!empty($category)) {
+        $args['category_name'] = $category;
     }
 
     $query = new WP_Query($args);
@@ -41,7 +50,7 @@ function blog_featured_layout_shortcode($atts) {
         $post_count = 0;
         ?>
         
-        <div class="blog-featured-container">
+        <div class="blog-featured-container" id="<?php echo $container_id; ?>">
             <?php while ($query->have_posts()) : $query->the_post(); 
                 $post_count++;
                 
@@ -83,7 +92,7 @@ function blog_featured_layout_shortcode($atts) {
                     </div>
                     
                     <?php if ($query->found_posts > 1) : ?>
-                        <div class="blog-featured-grid">
+                        <div class="blog-featured-grid" id="<?php echo $container_id; ?>-grid">
                     <?php endif; ?>
                     
                 <?php else : // Remaining posts in 2x2 grid ?>
@@ -127,6 +136,22 @@ function blog_featured_layout_shortcode($atts) {
                 </div> <!-- Close blog-featured-grid -->
             <?php endif; ?>
         </div>
+        
+        <?php
+        // Show load more button if load_more parameter is set and there are more posts
+        if ($load_more_posts > 0 && $query->found_posts > 5) : ?>
+            <div class="patrick-droppe-load-more-wrapper">
+                <button class="patrick-droppe-load-more" 
+                        data-container="#<?php echo $container_id; ?>-grid"
+                        data-layout="featured"
+                        data-category="<?php echo $category; ?>"
+                        data-posts-per-load="<?php echo $load_more_posts; ?>"
+                        data-offset="5">
+                    <span class="button-text"><?php echo $button_text; ?></span>
+                    <span class="button-loader" style="display: none;"></span>
+                </button>
+            </div>
+        <?php endif; ?>
 
     <?php 
     else : 

@@ -19,18 +19,28 @@ function blog_list_3x1_shortcode($atts) {
     $atts = shortcode_atts(array(
         'category' => '',
         'posts' => 3,
+        'load_more' => '',
+        'button_text' => 'Load More',
     ), $atts);
+
+    $initial_posts = intval($atts['posts']);
+    $load_more_posts = !empty($atts['load_more']) ? intval($atts['load_more']) : 0;
+    $category = sanitize_text_field($atts['category']);
+    $button_text = sanitize_text_field($atts['button_text']);
+    
+    // Generate unique container ID
+    $container_id = 'blog-list-' . uniqid();
 
     // Query arguments
     $args = array(
         'post_type' => 'post',
-        'posts_per_page' => intval($atts['posts']),
+        'posts_per_page' => $initial_posts,
         'post_status' => 'publish',
     );
 
     // Add category filter if specified
-    if (!empty($atts['category'])) {
-        $args['category_name'] = sanitize_text_field($atts['category']);
+    if (!empty($category)) {
+        $args['category_name'] = $category;
     }
 
     $query = new WP_Query($args);
@@ -40,7 +50,7 @@ function blog_list_3x1_shortcode($atts) {
 
     if ($query->have_posts()) : ?>
         
-        <div class="blog-list-container">
+        <div class="blog-list-container" id="<?php echo $container_id; ?>">
             <?php while ($query->have_posts()) : $query->the_post(); ?>
                 <article class="blog-grid-item">
                     <?php if (has_post_thumbnail()) : ?>
@@ -77,6 +87,22 @@ function blog_list_3x1_shortcode($atts) {
                 </article>
             <?php endwhile; ?>
         </div>
+        
+        <?php
+        // Show load more button if load_more parameter is set and there are more posts
+        if ($load_more_posts > 0 && $query->found_posts > $initial_posts) : ?>
+            <div class="patrick-droppe-load-more-wrapper">
+                <button class="patrick-droppe-load-more" 
+                        data-container="#<?php echo $container_id; ?>"
+                        data-layout="list"
+                        data-category="<?php echo $category; ?>"
+                        data-posts-per-load="<?php echo $load_more_posts; ?>"
+                        data-offset="<?php echo $initial_posts; ?>">
+                    <span class="button-text"><?php echo $button_text; ?></span>
+                    <span class="button-loader" style="display: none;"></span>
+                </button>
+            </div>
+        <?php endif; ?>
 
     <?php 
     else : 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Blog Grid Widget
+ * Blog Grid Widget with Load More
  * 
- * Creates a responsive 2x2 blog grid with category filtering
- * Shortcode: [blog_grid category="your-category-slug" posts="4"]
+ * Creates a responsive 2x2 blog grid with load more functionality
+ * Shortcode: [blog_grid_loadmore category="your-category-slug" initial="4" load_more="2"]
  */
 
 // Exit if accessed directly
@@ -12,26 +12,24 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Blog Grid 2x2 Shortcode Function
+ * Blog Grid Load More Shortcode Function
  */
-function blog_grid_2x2_shortcode($atts) {
+function blog_grid_loadmore_shortcode($atts) {
     // Shortcode attributes
     $atts = shortcode_atts(array(
         'category' => '',
-        'posts' => 4,
-        'load_more' => '',
-        'button_text' => 'Load More',
+        'initial' => 4,
+        'load_more' => 2,
     ), $atts);
 
-    $initial_posts = intval($atts['posts']);
-    $load_more_posts = !empty($atts['load_more']) ? intval($atts['load_more']) : 0;
+    $initial_posts = intval($atts['initial']);
+    $load_more_posts = intval($atts['load_more']);
     $category = sanitize_text_field($atts['category']);
-    $button_text = sanitize_text_field($atts['button_text']);
     
     // Generate unique container ID
     $container_id = 'blog-grid-' . uniqid();
 
-    // Query arguments
+    // Query arguments for initial posts
     $args = array(
         'post_type' => 'post',
         'posts_per_page' => $initial_posts,
@@ -89,17 +87,18 @@ function blog_grid_2x2_shortcode($atts) {
         </div>
         
         <?php
-        // Show load more button if load_more parameter is set and there are more posts
-        if ($load_more_posts > 0 && $query->found_posts > $initial_posts) : ?>
-            <div class="patrick-droppe-load-more-wrapper">
+        // Check if there are more posts
+        $total_posts = wp_count_posts()->publish;
+        if ($query->found_posts > $initial_posts) : ?>
+            <div class="patrick-droppe-load-more-wrapper" style="text-align: center; margin-top: 40px;">
                 <button class="patrick-droppe-load-more" 
                         data-container="#<?php echo $container_id; ?>"
                         data-layout="grid"
                         data-category="<?php echo $category; ?>"
                         data-posts-per-load="<?php echo $load_more_posts; ?>"
-                        data-offset="<?php echo $initial_posts; ?>">
-                    <span class="button-text"><?php echo $button_text; ?></span>
-                    <span class="button-loader" style="display: none;"></span>
+                        data-offset="<?php echo $initial_posts; ?>"
+                        style="background: #000; color: #fff; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                    Load More
                 </button>
             </div>
         <?php endif; ?>
@@ -115,4 +114,4 @@ function blog_grid_2x2_shortcode($atts) {
 }
 
 // Register the shortcode
-add_shortcode('blog_grid', 'blog_grid_2x2_shortcode');
+add_shortcode('blog_grid_loadmore', 'blog_grid_loadmore_shortcode');
