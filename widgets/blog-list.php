@@ -63,14 +63,18 @@ function blog_list_3x1_shortcode($atts) {
 
                     <div class="blog-grid-content">
                         <div class="blog-grid-meta">
-                            <?php 
-                                $content = get_post_field('post_content', get_the_ID());
-                                $word_count = str_word_count(strip_tags($content));
-                                $reading_time = ceil($word_count / 200);
-                                echo $reading_time . ' minutes read';
-                            ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php 
+                                    $content = get_post_field('post_content', get_the_ID());
+                                    $word_count = str_word_count(strip_tags($content));
+                                    $reading_time = ceil($word_count / 200);
+                                    echo $reading_time . ' minutes read';
+                                ?>
+                            </a>
                             <span class="separator">·</span>
-                            <?php echo get_the_date('F j, Y'); ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php echo get_the_date('F j, Y'); ?>
+                            </a>
                         </div>
 
                         <h3 class="blog-grid-title">

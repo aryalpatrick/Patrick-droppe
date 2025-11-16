@@ -78,7 +78,8 @@ class PatrickDroppe {
         // Localize script for AJAX
         wp_localize_script('patrick-droppe-scripts', 'patrick_droppe_ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('patrick_droppe_nonce')
+            'nonce' => wp_create_nonce('patrick_droppe_nonce'),
+            'debug' => defined('WP_DEBUG') && WP_DEBUG
         ));
     }
     
@@ -86,9 +87,16 @@ class PatrickDroppe {
      * AJAX handler for loading more posts
      */
     public function load_more_posts() {
+        // Check if nonce is set
+        if (!isset($_POST['nonce'])) {
+            wp_send_json_error('Nonce not provided');
+            return;
+        }
+        
         // Verify nonce
         if (!wp_verify_nonce($_POST['nonce'], 'patrick_droppe_nonce')) {
-            wp_die('Security check failed');
+            wp_send_json_error('Security check failed');
+            return;
         }
         
         $layout = sanitize_text_field($_POST['layout']);
@@ -125,14 +133,18 @@ class PatrickDroppe {
 
                     <div class="blog-grid-content">
                         <div class="blog-grid-meta">
-                            <?php 
-                                $content = get_post_field('post_content', get_the_ID());
-                                $word_count = str_word_count(strip_tags($content));
-                                $reading_time = ceil($word_count / 200);
-                                echo $reading_time . ' minutes read';
-                            ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php 
+                                    $content = get_post_field('post_content', get_the_ID());
+                                    $word_count = str_word_count(strip_tags($content));
+                                    $reading_time = ceil($word_count / 200);
+                                    echo $reading_time . ' minutes read';
+                                ?>
+                            </a>
                             <span class="separator">·</span>
-                            <?php echo get_the_date('F j, Y'); ?>
+                            <a href="<?php the_permalink(); ?>">
+                                <?php echo get_the_date('F j, Y'); ?>
+                            </a>
                         </div>
 
                         <h3 class="blog-grid-title">

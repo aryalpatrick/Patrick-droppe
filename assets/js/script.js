@@ -11,6 +11,13 @@ jQuery(document).ready(function($) {
         var postsPerLoad = parseInt(button.data('posts-per-load'));
         var currentOffset = parseInt(button.data('offset'));
         
+        // Check if nonce is available
+        if (!patrick_droppe_ajax.nonce) {
+            button.find('.button-text').text('Configuration Error');
+            console.error('Nonce not available');
+            return;
+        }
+        
         // Show loading state
         button.addClass('loading').prop('disabled', true);
         
@@ -26,6 +33,15 @@ jQuery(document).ready(function($) {
                 nonce: patrick_droppe_ajax.nonce
             },
             success: function(response) {
+                // Check if response contains error
+                if (response.indexOf('Security check failed') !== -1) {
+                    button.removeClass('loading');
+                    button.find('.button-text').text('Security Error');
+                    button.prop('disabled', true);
+                    console.error('Security check failed - nonce verification error');
+                    return;
+                }
+                
                 if (response.trim() !== '') {
                     // Append new posts to container
                     $(container).append(response);
@@ -42,10 +58,11 @@ jQuery(document).ready(function($) {
                     button.prop('disabled', true);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 button.removeClass('loading');
                 button.find('.button-text').text('Error Loading Posts');
                 button.prop('disabled', false);
+                console.error('AJAX Error:', status, error);
             }
         });
     });
