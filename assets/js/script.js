@@ -11,6 +11,13 @@ jQuery(document).ready(function($) {
         var postsPerLoad = parseInt(button.data('posts-per-load'));
         var currentOffset = parseInt(button.data('offset'));
         
+        // Check if AJAX object exists
+        if (typeof patrick_droppe_ajax === 'undefined') {
+            button.find('.button-text').text('Script Error');
+            console.error('patrick_droppe_ajax not defined - scripts not loaded properly');
+            return;
+        }
+        
         // Check if nonce is available
         if (!patrick_droppe_ajax.nonce) {
             button.find('.button-text').text('Configuration Error');
@@ -39,6 +46,14 @@ jQuery(document).ready(function($) {
                     button.find('.button-text').text('Security Error');
                     button.prop('disabled', true);
                     console.error('Security check failed - nonce verification error');
+                    return;
+                }
+                
+                if (response.indexOf('Nonce not provided') !== -1) {
+                    button.removeClass('loading');
+                    button.find('.button-text').text('Nonce Error');
+                    button.prop('disabled', true);
+                    console.error('Nonce not provided error');
                     return;
                 }
                 

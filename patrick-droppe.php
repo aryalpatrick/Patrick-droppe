@@ -89,14 +89,12 @@ class PatrickDroppe {
     public function load_more_posts() {
         // Check if nonce is set
         if (!isset($_POST['nonce'])) {
-            wp_send_json_error('Nonce not provided');
-            return;
+            wp_die('Nonce not provided');
         }
         
         // Verify nonce
         if (!wp_verify_nonce($_POST['nonce'], 'patrick_droppe_nonce')) {
-            wp_send_json_error('Security check failed');
-            return;
+            wp_die('Security check failed');
         }
         
         $layout = sanitize_text_field($_POST['layout']);
@@ -170,3 +168,4 @@ class PatrickDroppe {
 
 // Initialize the plugin
 new PatrickDroppe();
+

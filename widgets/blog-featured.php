@@ -156,7 +156,7 @@ function blog_featured_layout_shortcode($atts) {
                         data-posts-per-load="<?php echo $load_more_posts; ?>"
                         data-offset="5">
                     <span class="button-text"><?php echo $button_text; ?></span>
-                    <span class="button-loader" style="display: none;"></span>
+                    <span class="button-loader"></span>
                 </button>
             </div>
         <?php endif; ?>

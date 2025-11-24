@@ -103,7 +103,7 @@ function blog_list_3x1_shortcode($atts) {
                         data-posts-per-load="<?php echo $load_more_posts; ?>"
                         data-offset="<?php echo $initial_posts; ?>">
                     <span class="button-text"><?php echo $button_text; ?></span>
-                    <span class="button-loader" style="display: none;"></span>
+                    <span class="button-loader"></span>
                 </button>
             </div>
         <?php endif; ?>

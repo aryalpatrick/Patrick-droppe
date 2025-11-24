@@ -49,6 +49,12 @@
     font-weight: 500;
     line-height: 125%;
     margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .blog-list-container .blog-grid-excerpt {
@@ -64,6 +70,7 @@
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -79,7 +86,7 @@
 }
 
 .blog-grid-item:hover {
-    transform: scale(1.02);
+    transform: translateY(-4px);
 }
 
 .blog-grid-thumbnail {
@@ -144,6 +151,12 @@
     font-style: normal;
     font-weight: 500;
     line-height: 125%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .blog-grid-title a {
@@ -169,6 +182,7 @@
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -223,6 +237,12 @@
     font-weight: 500;
     line-height: 125%;
     margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .blog-featured-main .blog-grid-excerpt {
@@ -237,6 +257,7 @@
     line-height: 125%;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -293,6 +314,12 @@
         font-weight: 500;
         line-height: 125%;
         margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .blog-list-container .blog-grid-excerpt {
@@ -307,6 +334,7 @@
         line-height: 125%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
     }
 
@@ -343,6 +371,12 @@
         font-weight: 500;
         line-height: 125%;
         margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .blog-grid-excerpt {
@@ -357,6 +391,7 @@
         line-height: 125%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
     }
 
@@ -399,6 +434,12 @@
         font-weight: 500;
         line-height: 125%;
         margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .blog-featured-main .blog-grid-excerpt {
@@ -413,6 +454,7 @@
         line-height: 125%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
     }
 
@@ -429,87 +471,94 @@
 }
 
 .patrick-droppe-load-more {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18rem;
-    padding: 13px 32px;
-    background-color: #B1F946;
-    color: #023512;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: "DM Sans", sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    outline: none;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 18rem !important;
+    padding: 13px 32px !important;
+    background-color: #B1F946 !important;
+    color: #023512 !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-family: "DM Sans", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 24px !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    outline: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
 }
 
 .patrick-droppe-load-more:focus {
-    outline: none;
-    box-shadow: none;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .patrick-droppe-load-more:hover {
-    background-color: #78C406;
-    color: #023512;
-    transform: translateY(-1px);
+    background-color: #78C406 !important;
+    color: #023512 !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
 }
 
 .patrick-droppe-load-more:disabled {
-    background-color: #B1F946;
-    color: #023512;
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
+    background-color: #B1F946 !important;
+    color: #023512 !important;
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
 }
 
 .patrick-droppe-load-more.loading {
-    background-color: #B1F946;
-    color: #023512;
+    background-color: #B1F946 !important;
+    color: #023512 !important;
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 .patrick-droppe-load-more .button-text {
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease !important;
 }
 
 .patrick-droppe-load-more.loading .button-text {
-    opacity: 0;
+    opacity: 0 !important;
+}
+
+.patrick-droppe-load-more .button-loader {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin-top: -9px !important;
+    margin-left: -9px !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid rgba(2, 53, 18, 0.2) !important;
+    border-top: 2px solid #023512 !important;
+    border-radius: 50% !important;
+    animation: spin 0.8s linear infinite !important;
+    opacity: 0 !important;
+    transition: opacity 0.2s ease !important;
 }
 
 .patrick-droppe-load-more.loading .button-loader {
-    display: block !important;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.button-loader {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #E7E7E7;
-    border-radius: 50%;
-    border-top-color: #ffffff;
-    animation: spin 0.8s linear infinite;
+    opacity: 1 !important;
 }
 
 @keyframes spin {
     0% {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: rotate(0deg);
     }
-
     100% {
-        transform: translate(-50%, -50%) rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 
 @media (max-width: 768px) {
     .patrick-droppe-load-more {
-        width: 100%;
+        width: 100% !important;
     }
 }
