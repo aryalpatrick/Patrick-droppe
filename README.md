@@ -1,38 +1,77 @@
 # Patrick-Droppe WordPress Plugin
 
-A collection of custom widgets and shortcodes for WordPress.
+WordPress plugin for creating blog layouts with AJAX load more functionality.
 
-## Current Widgets
+## Available Shortcodes
 
-### Blog Grid Widget (2x2 Layout)
-- **Shortcode:** `[blog_grid category="your-category-slug" posts="4" load_more="2" button_text="Load More"]`
-- **Description:** Creates a responsive 2x2 blog grid with optional load more functionality
-- **Parameters:**
-  - `category` (optional): Category slug to filter posts
-  - `posts` (optional): Number of posts to display initially (default: 4)
-  - `load_more` (optional): Number of posts to load each time. If not set, no load more button appears
-  - `button_text` (optional): Custom text for load more button (default: "Load More")
+### Blog Grid (2x2 Layout)
+```
+[blog_grid]
+```
 
-### Blog List Widget (3x1 Layout)
-- **Shortcode:** `[blog_list category="your-category-slug" posts="3" load_more="3" button_text="View More"]`
-- **Description:** Creates a responsive 3x1 blog list layout with optional load more functionality
-- **Parameters:**
-  - `category` (optional): Category slug to filter posts
-  - `posts` (optional): Number of posts to display initially (default: 3)
-  - `load_more` (optional): Number of posts to load each time. If not set, no load more button appears
-  - `button_text` (optional): Custom text for load more button (default: "Load More")
+**Parameters:**
+- `category` - Category slug (optional)
+- `posts` - Initial posts to show (default: 4)
+- `load_more` - Posts to load per click (optional, no button if not set)
+- `button_text` - Button text (default: "Load More")
 
-### Blog Featured Layout Widget (1 + 2x2)
-- **Shortcode:** `[blog_featured category="your-category-slug" load_more="4" button_text="Show More"]`
-- **Description:** Creates a layout with 1 featured post (full-width) + 4 posts in 2x2 grid below with optional load more
-- **Parameters:**
-  - `category` (optional): Category slug to filter posts
-  - `load_more` (optional): Number of posts to load each time. If not set, no load more button appears
-  - `button_text` (optional): Custom text for load more button (default: "Load More")
-- **Note:** Always displays 5 most recent posts initially (1 featured + 4 in grid)
+**Examples:**
+```
+[blog_grid]
+[blog_grid category="news"]
+[blog_grid posts="6" load_more="2"]
+[blog_grid category="tech" posts="4" load_more="2" button_text="Load More Posts"]
+```
+
+### Blog List (3x1 Layout)
+```
+[blog_list]
+```
+
+**Parameters:**
+- `category` - Category slug (optional)
+- `posts` - Initial posts to show (default: 3)
+- `load_more` - Posts to load per click (optional, no button if not set)
+- `button_text` - Button text (default: "Load More")
+
+**Examples:**
+```
+[blog_list]
+[blog_list category="tutorials"]
+[blog_list posts="6" load_more="3"]
+[blog_list category="news" posts="3" load_more="3" button_text="View More"]
+```
+
+### Blog Featured (1 Featured + 2x2 Grid)
+```
+[blog_featured]
+```
+
+**Parameters:**
+- `category` - Category slug (optional)
+- `load_more` - Posts to load per click (optional, no button if not set)
+- `button_text` - Button text (default: "Load More")
+
+**Note:** Always shows 5 posts initially (1 featured + 4 in grid)
+
+**Examples:**
+```
+[blog_featured]
+[blog_featured category="featured"]
+[blog_featured load_more="2"]
+[blog_featured category="highlights" load_more="4" button_text="Show More"]
+```
 
 ## Installation
 
-1. Upload the plugin folder to `/wp-content/plugins/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Use the shortcodes in your posts, pages, or widgets
+1. Upload plugin folder to `/wp-content/plugins/`
+2. Activate plugin in WordPress admin
+3. Use shortcodes in posts, pages, or widgets
+
+## Important Notes
+
+- **Load More Button:** Only appears if `load_more` parameter is set
+- **Category Filter:** Use category slug, not category name
+- **Responsive:** All layouts adapt to mobile devices
+- **AJAX Loading:** No page refresh when loading more posts
+- **Smart Button:** Disappears automatically when all posts are loaded

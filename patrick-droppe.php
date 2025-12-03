@@ -159,9 +159,12 @@ class PatrickDroppe {
                 </article>
                 <?php
             endwhile;
+            wp_reset_postdata();
+        } else {
+            // No posts found - return empty response
+            wp_reset_postdata();
         }
         
-        wp_reset_postdata();
         wp_die();
     }
 }

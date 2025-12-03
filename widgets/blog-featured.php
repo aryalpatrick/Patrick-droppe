@@ -41,6 +41,14 @@ function blog_featured_layout_shortcode($atts) {
         $args['category_name'] = $category;
     }
 
+    // First, get total count of posts
+    $count_args = $args;
+    $count_args['posts_per_page'] = -1;
+    $count_query = new WP_Query($count_args);
+    $total_posts = $count_query->found_posts;
+    wp_reset_postdata();
+    
+    // Now get the actual posts to display
     $query = new WP_Query($args);
 
     // Start output buffering
@@ -147,14 +155,17 @@ function blog_featured_layout_shortcode($atts) {
         
         <?php
         // Show load more button if load_more parameter is set and there are more posts
-        if ($load_more_posts > 0 && $query->found_posts > 5) : ?>
+        if ($load_more_posts > 0 && $total_posts > 5) : ?>
+            <!-- Debug: Total posts: <?php echo $total_posts; ?>, Load more posts: <?php echo $load_more_posts; ?> -->
             <div class="patrick-droppe-load-more-wrapper">
                 <button class="patrick-droppe-load-more" 
                         data-container="#<?php echo $container_id; ?>-grid"
                         data-layout="featured"
                         data-category="<?php echo $category; ?>"
                         data-posts-per-load="<?php echo $load_more_posts; ?>"
-                        data-offset="5">
+                        data-offset="5"
+                        data-total-posts="<?php echo $total_posts; ?>"
+                        data-displayed-posts="5">
                     <span class="button-text"><?php echo $button_text; ?></span>
                     <span class="button-loader"></span>
                 </button>
