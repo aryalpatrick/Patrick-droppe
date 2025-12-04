@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Patrick-Droppe
  * Description: A collection of custom widgets and shortcodes for WordPress
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Pratik Aryal
  * Author URI: https://aryalpratik.com.np
  * Text Domain: patrick-droppe
@@ -101,6 +101,7 @@ class PatrickDroppe {
         $category = sanitize_text_field($_POST['category']);
         $offset = intval($_POST['offset']);
         $posts_per_load = intval($_POST['posts_per_load']);
+        $exclude_post = isset($_POST['exclude_post']) ? intval($_POST['exclude_post']) : 0;
         
         // Query arguments
         $args = array(
@@ -109,6 +110,11 @@ class PatrickDroppe {
             'post_status' => 'publish',
             'offset' => $offset,
         );
+        
+        // Exclude specific post if specified
+        if ($exclude_post > 0) {
+            $args['post__not_in'] = array($exclude_post);
+        }
         
         // Add category filter if specified
         if (!empty($category)) {
