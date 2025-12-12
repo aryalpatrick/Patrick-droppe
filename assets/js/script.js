@@ -12,6 +12,7 @@ jQuery(document).ready(function ($) {
         var currentOffset = parseInt(button.data('offset'));
         var totalPosts = parseInt(button.data('total-posts')) || 0;
         var displayedPosts = parseInt(button.data('displayed-posts')) || 0;
+        var excludePost = parseInt(button.data('exclude-post')) || 0;
 
         // Check if AJAX object exists
         if (typeof patrick_droppe_ajax === 'undefined') {
@@ -39,6 +40,7 @@ jQuery(document).ready(function ($) {
                 category: category,
                 offset: currentOffset,
                 posts_per_load: postsPerLoad,
+                exclude_post: excludePost,
                 nonce: patrick_droppe_ajax.nonce
             },
             success: function (response) {

@@ -43,6 +43,14 @@ function blog_grid_2x2_shortcode($atts) {
         $args['category_name'] = $category;
     }
 
+    // First, get total count of posts
+    $count_args = $args;
+    $count_args['posts_per_page'] = -1;
+    $count_query = new WP_Query($count_args);
+    $total_posts = $count_query->found_posts;
+    wp_reset_postdata();
+    
+    // Now get the actual posts to display
     $query = new WP_Query($args);
 
     // Start output buffering
@@ -52,56 +60,58 @@ function blog_grid_2x2_shortcode($atts) {
         
         <div class="blog-grid-container" id="<?php echo $container_id; ?>">
             <?php while ($query->have_posts()) : $query->the_post(); ?>
-                <article class="blog-grid-item">
-                    <?php if (has_post_thumbnail()) : ?>
-                        <div class="blog-grid-thumbnail">
-                            <a href="<?php the_permalink(); ?>">
+                <a href="<?php the_permalink(); ?>" class="blog-card-link">
+                    <article class="blog-grid-item">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <div class="blog-grid-thumbnail">
                                 <?php the_post_thumbnail('large'); ?>
-                            </a>
-                        </div>
-                    <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <div class="blog-grid-content">
-                        <div class="blog-grid-meta">
-                            <a href="<?php the_permalink(); ?>">
+                        <div class="blog-grid-content">
+                            <div class="blog-grid-meta">
+                                <span>
+                                    <?php 
+                                        $content = get_post_field('post_content', get_the_ID());
+                                        $word_count = str_word_count(strip_tags($content));
+                                        $reading_time = ceil($word_count / 200);
+                                        echo $reading_time . ' minutes read';
+                                    ?>
+                                </span>
+                                <span class="separator">·</span>
+                                <span>
+                                    <?php echo get_the_date('F j, Y'); ?>
+                                </span>
+                            </div>
+
+                            <h3 class="blog-grid-title">
+                                <?php the_title(); ?>
+                            </h3>
+
+                            <p class="blog-grid-excerpt">
                                 <?php 
-                                    $content = get_post_field('post_content', get_the_ID());
-                                    $word_count = str_word_count(strip_tags($content));
-                                    $reading_time = ceil($word_count / 200);
-                                    echo $reading_time . ' minutes read';
+                                    $excerpt = get_the_excerpt();
+                                    echo wp_trim_words($excerpt, 20, '...');
                                 ?>
-                            </a>
-                            <span class="separator">·</span>
-                            <a href="<?php the_permalink(); ?>">
-                                <?php echo get_the_date('F j, Y'); ?>
-                            </a>
+                            </p>
                         </div>
-
-                        <h3 class="blog-grid-title">
-                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                        </h3>
-
-                        <p class="blog-grid-excerpt">
-                            <?php 
-                                $excerpt = get_the_excerpt();
-                                echo wp_trim_words($excerpt, 20, '...');
-                            ?>
-                        </p>
-                    </div>
-                </article>
+                    </article>
+                </a>
             <?php endwhile; ?>
         </div>
         
         <?php
         // Show load more button if load_more parameter is set and there are more posts
-        if ($load_more_posts > 0 && $query->found_posts > $initial_posts) : ?>
+        if ($load_more_posts > 0 && $total_posts > $initial_posts) : ?>
             <div class="patrick-droppe-load-more-wrapper">
                 <button class="patrick-droppe-load-more" 
                         data-container="#<?php echo $container_id; ?>"
                         data-layout="grid"
                         data-category="<?php echo $category; ?>"
                         data-posts-per-load="<?php echo $load_more_posts; ?>"
-                        data-offset="<?php echo $initial_posts; ?>">
+                        data-offset="<?php echo $initial_posts; ?>"
+                        data-total-posts="<?php echo $total_posts; ?>"
+                        data-displayed-posts="<?php echo $initial_posts; ?>">
                     <span class="button-text"><?php echo $button_text; ?></span>
                     <span class="button-loader"></span>
                 </button>
