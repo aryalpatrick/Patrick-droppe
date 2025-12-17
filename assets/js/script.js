@@ -1,5 +1,75 @@
 jQuery(document).ready(function ($) {
 
+    // Multilingual translations
+    var translations = {
+        'en': {
+            'load_more': 'Load More',
+            'minutes_read': 'minutes read'
+        },
+        'fi': {
+            'load_more': 'Lataa lisää',
+            'minutes_read': 'minuutin lukuaika'
+        },
+        'de': {
+            'load_more': 'Mehr laden',
+            'minutes_read': 'Minuten Lesezeit'
+        },
+        'sv': {
+            'load_more': 'Ladda mer',
+            'minutes_read': 'minuters läsning'
+        }
+    };
+
+    // Function to get current language from HTML lang attribute
+    function getCurrentLanguage() {
+        var lang = $('html').attr('lang') || 'en';
+        // Handle language codes like 'en-US' by taking only the first part
+        return lang.split('-')[0].toLowerCase();
+    }
+
+    // Function to translate text
+    function translate(key) {
+        var lang = getCurrentLanguage();
+        return translations[lang] && translations[lang][key] ? translations[lang][key] : translations['en'][key];
+    }
+
+    // Function to update button texts
+    function updateButtonTexts() {
+        $('.patrick-droppe-load-more .button-text').text(translate('load_more'));
+    }
+
+    // Function to update reading time texts
+    function updateReadingTimes() {
+        $('.blog-grid-meta span').each(function() {
+            var text = $(this).text();
+            // Check if this span contains reading time (has numbers followed by "minutes read" or translated equivalent)
+            if (text.match(/\d+\s+(minutes read|minuutin lukuaika|Minuten Lesezeit|minuters läsning)/)) {
+                var minutes = text.match(/\d+/)[0];
+                $(this).text(minutes + ' ' + translate('minutes_read'));
+            }
+        });
+    }
+
+    // Initialize translations on page load
+    updateButtonTexts();
+    updateReadingTimes();
+
+    // Watch for language changes (if the lang attribute changes dynamically)
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'lang') {
+                updateButtonTexts();
+                updateReadingTimes();
+            }
+        });
+    });
+    
+    // Start observing the html element for lang attribute changes
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['lang']
+    });
+
     // Load More functionality
     $(document).on('click', '.patrick-droppe-load-more', function (e) {
         e.preventDefault();
@@ -72,6 +142,9 @@ jQuery(document).ready(function ($) {
                 } else {
                     // Append new posts to container
                     $(container).append(response);
+                    
+                    // Translate reading times in newly loaded content
+                    updateReadingTimes();
 
                     // Update offset and displayed count
                     var newOffset = currentOffset + postsPerLoad;

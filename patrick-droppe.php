@@ -126,43 +126,43 @@ class PatrickDroppe {
         if ($query->have_posts()) {
             while ($query->have_posts()) : $query->the_post();
                 ?>
-                <article class="blog-grid-item">
-                    <?php if (has_post_thumbnail()) : ?>
-                        <div class="blog-grid-thumbnail">
-                            <a href="<?php the_permalink(); ?>">
+                <a href="<?php the_permalink(); ?>" class="blog-card-link">
+                    <article class="blog-grid-item">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <div class="blog-grid-thumbnail">
                                 <?php the_post_thumbnail('large'); ?>
-                            </a>
-                        </div>
-                    <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <div class="blog-grid-content">
-                        <div class="blog-grid-meta">
-                            <a href="<?php the_permalink(); ?>">
+                        <div class="blog-grid-content">
+                            <div class="blog-grid-meta">
+                                <span>
+                                    <?php 
+                                        $content = get_post_field('post_content', get_the_ID());
+                                        $word_count = str_word_count(strip_tags($content));
+                                        $reading_time = ceil($word_count / 200);
+                                        echo $reading_time . ' minutes read';
+                                    ?>
+                                </span>
+                                <span class="separator">·</span>
+                                <span>
+                                    <?php echo get_the_date('F j, Y'); ?>
+                                </span>
+                            </div>
+
+                            <h3 class="blog-grid-title">
+                                <?php the_title(); ?>
+                            </h3>
+
+                            <p class="blog-grid-excerpt">
                                 <?php 
-                                    $content = get_post_field('post_content', get_the_ID());
-                                    $word_count = str_word_count(strip_tags($content));
-                                    $reading_time = ceil($word_count / 200);
-                                    echo $reading_time . ' minutes read';
+                                    $excerpt = get_the_excerpt();
+                                    echo wp_trim_words($excerpt, 20, '...');
                                 ?>
-                            </a>
-                            <span class="separator">·</span>
-                            <a href="<?php the_permalink(); ?>">
-                                <?php echo get_the_date('F j, Y'); ?>
-                            </a>
+                            </p>
                         </div>
-
-                        <h3 class="blog-grid-title">
-                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                        </h3>
-
-                        <p class="blog-grid-excerpt">
-                            <?php 
-                                $excerpt = get_the_excerpt();
-                                echo wp_trim_words($excerpt, 20, '...');
-                            ?>
-                        </p>
-                    </div>
-                </article>
+                    </article>
+                </a>
                 <?php
             endwhile;
             wp_reset_postdata();
